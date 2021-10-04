@@ -163,13 +163,13 @@ public class RedisSessionManager extends ManagerBase {
 
         // Ensure generation of a unique session identifier.
         if (null != requestedSessionId) {
-            sessionId = redisSessionKeyGenerator.generateKey(this, requestedSessionId);
+            sessionId = generateSessionId();
             if (!tomcatSessionRedisTemplate.opsForValue().setIfAbsent(sessionId, NULL_SESSION)) {
                 sessionId = null;
             }
         } else {
             do {
-                sessionId = redisSessionKeyGenerator.generateKey(this, requestedSessionId);
+                sessionId = generateSessionId();
             } while (!tomcatSessionRedisTemplate.opsForValue().setIfAbsent(sessionId, NULL_SESSION));
         }
 
@@ -336,8 +336,12 @@ public class RedisSessionManager extends ManagerBase {
         }
     }
 
-    public String tomcatSessionId() {
-        return generateSessionId();
+    public String generateSessionId() {
+        return redisSessionKeyGenerator.generateKey(this, null);
+    }
+
+    public String generateDefaultKey() {
+        return sessionIdGenerator.generateSessionId();
     }
 
     @Override

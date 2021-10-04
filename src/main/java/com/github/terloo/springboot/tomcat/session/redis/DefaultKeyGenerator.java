@@ -5,7 +5,7 @@ public class DefaultKeyGenerator implements RedisSessionKeyGenerator {
     @Override
     public String generateKey(RedisSessionManager redisSessionManager, String requestedSessionId) {
         if (requestedSessionId == null) {
-            requestedSessionId = redisSessionManager.tomcatSessionId();
+            requestedSessionId = redisSessionManager.generateDefaultKey();
         }
         return sessionIdWithJvmRoute(requestedSessionId, redisSessionManager.getJvmRoute());
     }
