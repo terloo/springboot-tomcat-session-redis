@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.PostConstruct;
+
+import com.github.terloo.springboot.tomcat.RedisSessionProperties;
 
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
@@ -14,6 +17,7 @@ import org.apache.catalina.Valve;
 import org.apache.catalina.session.ManagerBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 public class RedisSessionManager extends ManagerBase {
@@ -24,6 +28,9 @@ public class RedisSessionManager extends ManagerBase {
 
     private RedisSessionKeyGenerator redisSessionKeyGenerator;
 
+    @Autowired
+    private RedisSessionProperties redisSessionProperties;
+
     public RedisSessionManager(RedisTemplate<String, RedisSession> tomcatSessionRedisTemplate,
             RedisSessionKeyGenerator redisSessionKeyGenerator) {
         this.tomcatSessionRedisTemplate = tomcatSessionRedisTemplate;
@@ -31,11 +38,11 @@ public class RedisSessionManager extends ManagerBase {
     }
 
     enum SessionPersistPolicy {
-        DEFAULT, SAVE_ON_CHANGE, ALWAYS_SAVE_AFTER_REQUEST;
+        DEFAULT, ON_CHANGE, AFTER_REQUEST;
 
         static SessionPersistPolicy fromName(String name) {
             for (SessionPersistPolicy policy : SessionPersistPolicy.values()) {
-                if (policy.name().equalsIgnoreCase(name)) {
+                if (policy.name().replaceAll("_", "").equalsIgnoreCase(name)) {
                     return policy;
                 }
             }
@@ -55,20 +62,9 @@ public class RedisSessionManager extends ManagerBase {
 
     protected EnumSet<SessionPersistPolicy> sessionPersistPoliciesSet = EnumSet.of(SessionPersistPolicy.DEFAULT);
 
-    public String getSessionPersistPolicies() {
-        StringBuilder policies = new StringBuilder();
-        for (Iterator<SessionPersistPolicy> iter = this.sessionPersistPoliciesSet.iterator(); iter.hasNext();) {
-            SessionPersistPolicy policy = iter.next();
-            policies.append(policy.name());
-            if (iter.hasNext()) {
-                policies.append(",");
-            }
-        }
-        return policies.toString();
-    }
-
-    public void setSessionPersistPolicies(String sessionPersistPolicies) {
-        String[] policyArray = sessionPersistPolicies.split(",");
+    @PostConstruct
+    public void postConstruct() {
+        String[] policyArray = redisSessionProperties.getStrategy().split(",");
         EnumSet<SessionPersistPolicy> policySet = EnumSet.of(SessionPersistPolicy.DEFAULT);
         for (String policyName : policyArray) {
             SessionPersistPolicy policy = SessionPersistPolicy.fromName(policyName);
@@ -78,11 +74,11 @@ public class RedisSessionManager extends ManagerBase {
     }
 
     public boolean getSaveOnChange() {
-        return this.sessionPersistPoliciesSet.contains(SessionPersistPolicy.SAVE_ON_CHANGE);
+        return this.sessionPersistPoliciesSet.contains(SessionPersistPolicy.ON_CHANGE);
     }
 
     public boolean getAlwaysSaveAfterRequest() {
-        return this.sessionPersistPoliciesSet.contains(SessionPersistPolicy.ALWAYS_SAVE_AFTER_REQUEST);
+        return this.sessionPersistPoliciesSet.contains(SessionPersistPolicy.AFTER_REQUEST);
     }
 
     @Override
