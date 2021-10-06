@@ -229,7 +229,7 @@ public class RedisSessionManager extends ManagerBase {
         } else if (id.equals(currentSessionId.get())) {
             session = currentSession.get();
         } else {
-            session = loadSessionDataFromRedis(id);
+            session = loadSessionFromRedis(id);
             if (session != null) {
                 currentSession.set(session);
                 currentSessionIsPersisted.set(true);
@@ -244,16 +244,24 @@ public class RedisSessionManager extends ManagerBase {
         return session;
     }
 
-    public RedisSession loadSessionDataFromRedis(String id) throws IOException {
+    public RedisSession loadSessionFromRedis(String id) throws IOException {
         log.trace("Attempting to load session " + id + " from Redis");
 
-        RedisSession data = (RedisSession) tomcatSessionRedisTemplate.opsForValue().get(id);
+        RedisSession session = tomcatSessionRedisTemplate.opsForValue().get(id);
 
-        if (data == null) {
+        if (session == null) {
             log.trace("Session " + id + " not found in Redis");
+        } else {
+            session.setManager(this);
+            session.setId(id);
+            session.setNew(false);
+            session.setMaxInactiveInterval(getMaxInactiveInterval());
+            session.access();
+            session.setValid(true);
+            session.resetDirtyTracking();
         }
 
-        return data;
+        return session;
     }
 
     public void save(Session session) throws IOException {
