@@ -57,8 +57,11 @@ public class RedisSession extends StandardSession {
         super.setAttribute(key, value);
 
         if ((value != null || oldValue != null)
-                && (value == null && oldValue != null || oldValue == null && value != null
-                        || !value.getClass().isInstance(oldValue) || !value.equals(oldValue))) {
+                && (value == null && oldValue != null
+                || oldValue == null && value != null
+                || !value.getClass().isInstance(oldValue)
+                || !value.equals(oldValue))) {
+
             if (this.manager instanceof RedisSessionManager && ((RedisSessionManager) this.manager).getSaveOnChange()) {
                 try {
                     ((RedisSessionManager) this.manager).save(this, true);
@@ -69,6 +72,7 @@ public class RedisSession extends StandardSession {
             } else {
                 changedAttributes.put(key, value);
             }
+
         }
     }
 

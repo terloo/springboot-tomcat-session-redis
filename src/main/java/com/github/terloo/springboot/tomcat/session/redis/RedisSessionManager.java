@@ -287,16 +287,17 @@ public class RedisSessionManager extends ManagerBase {
 
         String sessionId = redisSession.getId();
 
-        Boolean isCurrentSessionPersisted;
-        if (forceSave || redisSession.isDirty()
-                || null == (isCurrentSessionPersisted = this.currentSessionIsPersisted.get())
+        Boolean isCurrentSessionPersisted = this.currentSessionIsPersisted.get();
+        if (forceSave
+                || redisSession.isDirty()
+                || isCurrentSessionPersisted == null
                 || !isCurrentSessionPersisted) {
 
             log.trace("Save was determined to be necessary");
-
+            
+            redisSession.resetDirtyTracking();
             tomcatSessionRedisTemplate.opsForValue().set(sessionId, redisSession);
 
-            redisSession.resetDirtyTracking();
         } else {
             log.trace("Save was determined to be unnecessary");
         }
