@@ -1,6 +1,6 @@
 # SpringBoot-tomcat-session-redis
 
-一个SpringBoot-starter小工具，修改自[tomcat-redis-session-manager](https://github.com/jcoleman/tomcat-redis-session-manager)使其适配Tomcat8以及spring-boot-starter-data-redis。
+一个SpringBoot-starter小工具，修改自[tomcat-redis-session-manager](https://github.com/jcoleman/tomcat-redis-session-manager)使其适配Tomcat8并整合进springboot。
 
 **仍处于开发阶段**
 
@@ -41,7 +41,11 @@
 2. 或者复制src至自己的项目中自行修改
 
 ## 配置项
-1. 生成redis键值的规则，默认采用tomcat的session键值生成规则，示例中修改为uuid
+1. 全局开关，默认为true
+   ```properties
+   server.servlet.session.store-in-redis=true
+   ```
+2. 生成redis键值的规则，默认采用tomcat的session键值生成规则，示例中修改为uuid
    ```java
    import com.github.terloo.springboot.tomcat.session.redis.RedisSessionKeyGenerator;
    import com.github.terloo.springboot.tomcat.session.redis.RedisSessionManager;
@@ -55,4 +59,19 @@
         }
         
    }
+   ```
+3. 持久化策略
+   1. default：默认策略，只在识别到session改变时(**见注意事项**)，在请求结束后进行持久化。
+   2. onChange：只要进行了set、delelte操作，立即持久化
+   3. afterRequest：每次请求结束后都进行持久化
+   > onChange和agterRequest策略可以同时存在，存在任一时default策略将会失效
+   ```properties
+   server.servlet.session.strategy=onChange,afterRequest
+   ```
+
+## 注意事项
+1. 由于判断对象是否相等使用equals，导致如果隐式修改一个session，session将不会被识别为已改变，如下
+   ```java
+   List myArray = session.getAttribute("myArray");
+   myArray.add(additionalArrayValue);
    ```
