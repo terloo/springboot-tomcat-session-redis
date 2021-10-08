@@ -5,6 +5,7 @@ import com.github.terloo.springboot.tomcat.session.redis.RedisSession;
 import com.github.terloo.springboot.tomcat.session.redis.RedisSessionFactoryCustomizer;
 import com.github.terloo.springboot.tomcat.session.redis.RedisSessionKeyGenerator;
 import com.github.terloo.springboot.tomcat.session.redis.RedisSessionManager;
+import com.github.terloo.springboot.tomcat.session.redis.RedisSessionSerializer;
 
 import org.apache.catalina.startup.Tomcat;
 import org.apache.coyote.UpgradeProtocol;
@@ -17,7 +18,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -39,19 +39,21 @@ public class RedisSessionAutoConfiguration {
     }
 
     @Bean
-    public RedisSessionManager redisSessionManager(RedisTemplate<String, RedisSession> tomcatSessionRedisTemplate,
-            RedisSessionKeyGenerator redisSessionKeyGenerator) {
-        return new RedisSessionManager(tomcatSessionRedisTemplate, redisSessionKeyGenerator);
+    public RedisSessionManager redisSessionManager() {
+        return new RedisSessionManager();
     }
 
     @Bean
-    public RedisTemplate<String, RedisSession> tomcatSessionRedisTemplate(RedisConnectionFactory factory) {
+    public RedisSessionSerializer redisSessionSerializer() {
+        return new RedisSessionSerializer();
+    }
+
+    @Bean
+    public RedisTemplate<String, RedisSession> tomcatSessionRedisTemplate(RedisConnectionFactory factory, RedisSessionSerializer sessionSerializer) {
         RedisTemplate<String, RedisSession> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 
-        JdkSerializationRedisSerializer sessionSerializer = new JdkSerializationRedisSerializer();
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-
         template.setKeySerializer(stringRedisSerializer);
         template.setHashKeySerializer(stringRedisSerializer);
         template.setValueSerializer(sessionSerializer);

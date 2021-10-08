@@ -24,18 +24,14 @@ public class RedisSessionManager extends ManagerBase {
 
     private static final Logger log = LoggerFactory.getLogger(RedisSessionManager.class);
 
+    @Autowired
     private RedisTemplate<String, RedisSession> tomcatSessionRedisTemplate;
 
+    @Autowired
     private RedisSessionKeyGenerator redisSessionKeyGenerator;
 
     @Autowired
     private RedisSessionProperties redisSessionProperties;
-
-    public RedisSessionManager(RedisTemplate<String, RedisSession> tomcatSessionRedisTemplate,
-            RedisSessionKeyGenerator redisSessionKeyGenerator) {
-        this.tomcatSessionRedisTemplate = tomcatSessionRedisTemplate;
-        this.redisSessionKeyGenerator = redisSessionKeyGenerator;
-    }
 
     enum SessionPersistPolicy {
         DEFAULT, ON_CHANGE, AFTER_REQUEST;
@@ -252,7 +248,6 @@ public class RedisSessionManager extends ManagerBase {
         if (session == null) {
             log.trace("Session " + id + " not found in Redis");
         } else {
-            session.setManager(this);
             session.setId(id);
             session.setNew(false);
             session.setMaxInactiveInterval(getMaxInactiveInterval());
@@ -296,6 +291,7 @@ public class RedisSessionManager extends ManagerBase {
             log.trace("Save was determined to be necessary");
             
             redisSession.resetDirtyTracking();
+            redisSession.endAccess();
             tomcatSessionRedisTemplate.opsForValue().set(sessionId, redisSession);
 
         } else {
