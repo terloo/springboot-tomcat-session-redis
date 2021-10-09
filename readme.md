@@ -1,12 +1,12 @@
 # SpringBoot-tomcat-session-redis
 
-一个SpringBoot-starter小工具，修改自[tomcat-redis-session-manager](https://github.com/jcoleman/tomcat-redis-session-manager)使其适配Tomcat8并整合进springboot。
+一个SpringBoot-starter小工具，修改自[tomcat-redis-session-manager](https://github.com/jcoleman/tomcat-redis-session-manager)使其适配SpringBoot2.0+(Tomcat8.5+)。
 
 **仍处于开发阶段**
 
 ## Future
 1. 将SpringBoot内嵌tomcat的session存储至redis。
-2. 与SpringSession通过Filter实现不同，该项目通过配置内嵌tomcat的方式来修改session存储位置。能较好兼容使用tomcat的filter进行session操作的第三方项目。
+2. 与SpringSession通过Filter实现不同，该项目通过配置内嵌tomcat的Manager的方式来修改session存储位置。
 
 ## 依赖
 1. 环境：你的应用需要依赖web和redis的starter
