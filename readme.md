@@ -33,7 +33,7 @@
    <dependency>
         <groupId>io.github.terloo</groupId>
         <artifactId>embedded-tomcat-session-redis-boot-starter</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.2-SNAPSHOT</version>
     </dependency>
    ```
 2. 或者复制src至自己的项目中自行修改
@@ -65,6 +65,15 @@
    > onChange和agterRequest策略可以同时存在，存在任一时default策略将会失效
    ```properties
    server.servlet.session.strategy=onChange,afterRequest
+   ```
+4. 手动脏跟踪
+   ```properties
+   server.servlet.session.dirty-tracking.enable=true  # 是否启用手动脏跟踪
+   server.servlet.session.dirty-tracking.flag=dirtyFlag  # 脏跟踪标识，默认为__changed__
+   ```
+   启用后可以使用以下代码手动进行session持久化
+   ```java
+   session.setAttribute("dirtyFlag", null);
    ```
 
 ## 注意事项
