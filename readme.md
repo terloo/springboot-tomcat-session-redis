@@ -31,9 +31,9 @@
 1. 引用starter依赖：
    ```xml
    <dependency>
-        <groupId>com.github.terloo</groupId>
+        <groupId>io.github.terloo</groupId>
         <artifactId>embedded-tomcat-session-redis-boot-starter</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </dependency>
    ```
 2. 或者复制src至自己的项目中自行修改
