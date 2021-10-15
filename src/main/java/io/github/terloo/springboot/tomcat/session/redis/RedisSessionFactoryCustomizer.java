@@ -1,4 +1,4 @@
-package com.github.terloo.springboot.tomcat.session.redis;
+package io.github.terloo.springboot.tomcat.session.redis;
 
 import org.apache.catalina.Context;
 import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;

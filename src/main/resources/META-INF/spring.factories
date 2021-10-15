@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.github.terloo.springboot.tomcat.RedisSessionAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.github.terloo.springboot.tomcat.RedisSessionAutoConfiguration

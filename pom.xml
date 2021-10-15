@@ -4,7 +4,7 @@
 
     <groupId>io.github.terloo</groupId>
     <artifactId>embedded-tomcat-session-redis-boot-starter</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
 
     <name>embedded-tomcat-session-redis-boot-starter</name>
     <description>A SpringBoot-starter, modified from https://github.com/jcoleman/tomcat-redis-session-manager to adapt to SpringBoot2.0+ (Tomcat8.5+)</description>
@@ -19,13 +19,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -144,11 +144,13 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
     <scm>
         <url>https://github.com/terloo/springboot-tomcat-session-redis</url>
         <connection>https://github.com/terloo/springboot-tomcat-session-redis.git</connection>
         <developerConnection>https://github.com/terloo</developerConnection>
     </scm>
+
     <developers>
         <developer>
             <name>terloo</name>

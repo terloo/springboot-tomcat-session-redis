@@ -1,4 +1,4 @@
-package com.github.terloo.springboot.tomcat.session.redis;
+package io.github.terloo.springboot.tomcat.session.redis;
 
 public class DefaultKeyGenerator implements RedisSessionKeyGenerator {
 

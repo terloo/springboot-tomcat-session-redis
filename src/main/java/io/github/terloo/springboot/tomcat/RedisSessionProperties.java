@@ -1,10 +1,10 @@
-package com.github.terloo.springboot.tomcat;
-
-import com.github.terloo.springboot.tomcat.session.redis.RedisSession;
+package io.github.terloo.springboot.tomcat;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "server.servlet.session")
+import io.github.terloo.springboot.tomcat.session.redis.RedisSession;
+
+@ConfigurationProperties(prefix = "server.servlet.session.redis")
 public class RedisSessionProperties {
 
     private String strategy = "default";

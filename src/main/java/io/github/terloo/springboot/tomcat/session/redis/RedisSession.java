@@ -1,4 +1,4 @@
-package com.github.terloo.springboot.tomcat.session.redis;
+package io.github.terloo.springboot.tomcat.session.redis;
 
 import java.io.IOException;
 import java.security.Principal;

@@ -1,4 +1,4 @@
-package com.github.terloo.springboot.tomcat.session.redis;
+package io.github.terloo.springboot.tomcat.session.redis;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -7,8 +7,6 @@ import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
-
-import com.github.terloo.springboot.tomcat.RedisSessionProperties;
 
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
@@ -19,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+
+import io.github.terloo.springboot.tomcat.RedisSessionProperties;
 
 public class RedisSessionManager extends ManagerBase {
 

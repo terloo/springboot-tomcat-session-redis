@@ -1,11 +1,4 @@
-package com.github.terloo.springboot.tomcat;
-
-import com.github.terloo.springboot.tomcat.session.redis.DefaultKeyGenerator;
-import com.github.terloo.springboot.tomcat.session.redis.RedisSession;
-import com.github.terloo.springboot.tomcat.session.redis.RedisSessionFactoryCustomizer;
-import com.github.terloo.springboot.tomcat.session.redis.RedisSessionKeyGenerator;
-import com.github.terloo.springboot.tomcat.session.redis.RedisSessionManager;
-import com.github.terloo.springboot.tomcat.session.redis.RedisSessionSerializer;
+package io.github.terloo.springboot.tomcat;
 
 import org.apache.catalina.startup.Tomcat;
 import org.apache.coyote.UpgradeProtocol;
@@ -20,9 +13,16 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import io.github.terloo.springboot.tomcat.session.redis.DefaultKeyGenerator;
+import io.github.terloo.springboot.tomcat.session.redis.RedisSession;
+import io.github.terloo.springboot.tomcat.session.redis.RedisSessionFactoryCustomizer;
+import io.github.terloo.springboot.tomcat.session.redis.RedisSessionKeyGenerator;
+import io.github.terloo.springboot.tomcat.session.redis.RedisSessionManager;
+import io.github.terloo.springboot.tomcat.session.redis.RedisSessionSerializer;
+
 @Configuration
 @ConditionalOnWebApplication
-@ConditionalOnProperty(name = "server.servlet.session.store-in-redis", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "server.servlet.session.redis.enable", havingValue = "true", matchIfMissing = true)
 @ConditionalOnClass({ Tomcat.class, UpgradeProtocol.class })
 @EnableConfigurationProperties(RedisSessionProperties.class)
 public class RedisSessionAutoConfiguration {
