@@ -33,7 +33,7 @@
    <dependency>
         <groupId>io.github.terloo</groupId>
         <artifactId>embedded-tomcat-session-redis-boot-starter</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.2</version>
     </dependency>
    ```
 2. 或者复制src至自己的项目中自行修改
@@ -41,12 +41,12 @@
 ## 配置项
 1. 全局开关，默认为true
    ```properties
-   server.servlet.session.store-in-redis=true
+   server.servlet.session.redis.enable=true
    ```
 2. 生成redis键值的规则，默认采用tomcat的session键值生成规则，示例中修改为uuid
    ```java
-   import com.github.terloo.springboot.tomcat.session.redis.RedisSessionKeyGenerator;
-   import com.github.terloo.springboot.tomcat.session.redis.RedisSessionManager;
+   import io.github.terloo.springboot.tomcat.session.redis.RedisSessionKeyGenerator;
+   import io.github.terloo.springboot.tomcat.session.redis.RedisSessionManager;
    
    @Component
    public class MyGenerator implements RedisSessionKeyGenerator {
@@ -59,17 +59,17 @@
    }
    ```
 3. 持久化策略
+   ```properties
+   server.servlet.session.redis.strategy=onChange,afterRequest
+   ```
    1. default：默认策略，只在识别到session改变时(**见注意事项**)，在请求结束后进行持久化。
    2. onChange：只要进行了set、delelte操作，立即持久化
    3. afterRequest：每次请求结束后都进行持久化
-   > onChange和agterRequest策略可以同时存在，存在任一时default策略将会失效
-   ```properties
-   server.servlet.session.strategy=onChange,afterRequest
-   ```
+   > onChange和afterRequest策略可以同时存在，存在任一时default策略将会失效
 4. 手动脏跟踪
    ```properties
-   server.servlet.session.dirty-tracking.enable=true  # 是否启用手动脏跟踪
-   server.servlet.session.dirty-tracking.flag=dirtyFlag  # 脏跟踪标识，默认为__changed__
+   server.servlet.session.redis.dirty-tracking.enable=true
+   server.servlet.session.redis.dirty-tracking.flag=dirtyFlag  # 脏跟踪标识，默认为__changed__
    ```
    启用后可以使用以下代码手动进行session持久化
    ```java
